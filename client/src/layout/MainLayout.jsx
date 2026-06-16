@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import Sidebar from "../pages/sidebar/Sidebar";
+import Sidebar from "../pages/sidebar/SideBar";
 import Header from "../pages/header/Header";
 import Footer from "../pages/footer/Footer";
 import { FaBars, FaTimes } from "react-icons/fa";
