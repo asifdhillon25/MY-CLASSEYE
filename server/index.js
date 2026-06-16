@@ -28,7 +28,8 @@ app.use(
       "http://localhost:5173",
       "http://localhost:5174",
       "http://192.168.1.6:5173/",
-      "http://192.168.1.6:5173" // Added without trailing slash
+      "http://192.168.1.6:5173" ,// Added without trailing slash
+      "https://my-classeye.vercel.app/" 
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
