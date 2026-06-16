@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    @apply transition-colors duration-200;
+    @apply font-sans; /* Use the font defined in Tailwind */
+}
+
+/* Custom scrollbar styles */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}
+
+.dark .overflow-y-auto {
+  scrollbar-color: #475569 transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 3px;
+}
+
+.dark .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+.dark .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Add to your global CSS file */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
