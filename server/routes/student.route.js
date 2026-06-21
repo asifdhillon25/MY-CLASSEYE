@@ -6,7 +6,9 @@ const {
   getStudentById,
   updateStudent,
   deleteStudent,
-  getStudentsByDepartment,updateStudentPhoto,
+  getStudentsByDepartment,
+  updateStudentPhoto,
+  getStudentDashboard,
 } = require("../controllers/student.controller");
 
 // Create a new student
@@ -14,6 +16,9 @@ router.post("/", createStudent);
 
 // Get all students (optional ?status=active/inactive)
 router.get("/", getStudents);
+
+// Get calculated dashboard data for a student
+router.get("/dashboard/:id", getStudentDashboard);
 
 // Get a single student by ID
 router.get("/:id", getStudentById);

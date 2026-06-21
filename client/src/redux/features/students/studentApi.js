@@ -14,6 +14,18 @@ export const studentApi = apiSlice.injectEndpoints({
       providesTags: ["Students"],
     }),
 
+    // GET calculated student dashboard data
+    getStudentDashboard: builder.query({
+      query: ({ id, timeframe = "week", date }) => ({
+        url: `/students/dashboard/${id}`,
+        params: {
+          timeframe,
+          ...(date && { date }),
+        },
+      }),
+      providesTags: ["Students"],
+    }),
+
     // ✅ ADD student
     addStudent: builder.mutation({
       query: (studentData) => ({
@@ -56,6 +68,7 @@ export const studentApi = apiSlice.injectEndpoints({
 export const {
   useGetStudentsQuery,
   useGetStudentByIdQuery,
+  useGetStudentDashboardQuery,
   useAddStudentMutation,
   useUpdateStudentMutation,
   useDeleteStudentMutation,
