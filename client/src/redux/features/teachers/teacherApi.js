@@ -15,6 +15,19 @@ export const teacherApi = apiSlice.injectEndpoints({
       providesTags: ["Teachers"],
     }),
 
+    // GET calculated teacher dashboard data
+    getTeacherDashboard: builder.query({
+      query: ({ id, timeframe = "week", classId, date }) => ({
+        url: `/teachers/dashboard/${id}`,
+        params: {
+          timeframe,
+          ...(classId && { classId }),
+          ...(date && { date }),
+        },
+      }),
+      providesTags: ["Teachers"],
+    }),
+
     // ✅ ADD teacher
     addTeacher: builder.mutation({
       query: (teacherData) => ({
@@ -50,6 +63,7 @@ export const teacherApi = apiSlice.injectEndpoints({
 export const {
   useGetTeachersQuery,
   useGetTeacherByIdQuery,
+  useGetTeacherDashboardQuery,
   useAddTeacherMutation,
   useUpdateTeacherMutation,
   useDeleteTeacherMutation,

@@ -7,6 +7,7 @@ const {
   getTeacherById,
   updateTeacher,
   deleteTeacher,
+  getTeacherDashboard,
 } = require("../controllers/teacher.controller");
 
 // Create a new teacher
@@ -14,6 +15,9 @@ router.post("/", createTeacher);
 
 // Get all teachers (optional ?status=active/inactive)
 router.get("/", getTeachers);
+
+// Get calculated dashboard data for a teacher
+router.get("/dashboard/:id", getTeacherDashboard);
 
 // Get a single teacher by ID
 router.get("/:id", getTeacherById);
