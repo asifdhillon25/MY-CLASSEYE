@@ -199,6 +199,7 @@ const StudentProfile = () => {
               </button>
               <Link
                 to={`/app/students/edit/${student._id}`}
+                state={{ from: `/app/students/${student._id}` }}
                 className="px-4 py-2 bg-light-surfaceMuted dark:bg-dark-surfaceMuted border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-background dark:hover:bg-dark-background transition-colors flex items-center gap-2"
               >
                 <FaEdit className="w-4 h-4" />

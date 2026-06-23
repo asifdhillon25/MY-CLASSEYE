@@ -1,6 +1,6 @@
 // AddStudentsToClass.jsx
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   FaArrowLeft,
   FaUserGraduate,
@@ -20,6 +20,8 @@ import { useGetStudentsQuery } from "../redux/features/students/studentApi";
 const AddStudentsToClass = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const backPath = location.state?.from || "/app/classes";
 
   // Fetch class details
   const { data: classData, isLoading: classLoading } = useGetClassByIdQuery(id);
@@ -105,7 +107,7 @@ const AddStudentsToClass = () => {
 
       // Navigate back after 2 seconds
       setTimeout(() => {
-        navigate("/app/classes");
+        navigate(backPath);
       }, 2000);
     } catch (error) {
       console.error("Error updating class:", error);
@@ -150,7 +152,7 @@ const AddStudentsToClass = () => {
               The requested class could not be found.
             </p>
             <button
-              onClick={() => navigate("/app/classes")}
+              onClick={() => navigate(backPath)}
               className="px-4 py-2 bg-brand-teal text-white rounded-lg hover:bg-light-primaryHover dark:hover:bg-dark-primaryHover transition-colors"
             >
               Back to Classes
@@ -169,7 +171,7 @@ const AddStudentsToClass = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => navigate("/app/classes")}
+                onClick={() => navigate(backPath)}
                 className="p-2 rounded-lg border border-light-border dark:border-dark-border text-light-textSecondary dark:text-dark-textSecondary hover:bg-light-surfaceMuted dark:hover:bg-dark-surfaceMuted transition-colors"
               >
                 <FaArrowLeft />
@@ -368,7 +370,7 @@ const AddStudentsToClass = () => {
 
             <div className="flex gap-3">
               <button
-                onClick={() => navigate("/app/classes")}
+                onClick={() => navigate(backPath)}
                 className="px-6 py-3 border border-light-border dark:border-dark-border rounded-lg text-light-textSecondary dark:text-dark-textSecondary hover:bg-light-surfaceMuted dark:hover:bg-dark-surfaceMuted transition-colors"
                 disabled={isSubmitting}
               >

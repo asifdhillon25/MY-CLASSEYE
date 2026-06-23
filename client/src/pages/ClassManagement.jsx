@@ -419,6 +419,7 @@ const ClassManagement = () => {
                           </div>
                           <Link
                             to={`/app/addstudentstoclass/${cls._id}`}
+                            state={{ from: "/app/classes" }}
                             className="inline-flex items-center gap-1 px-3 py-1.5 text-xs bg-brand-teal text-white rounded-lg hover:bg-light-primaryHover dark:hover:bg-dark-primaryHover transition-colors"
                           >
                             <FaPlus className="w-3 h-3" />

@@ -691,6 +691,7 @@ const TeacherDashboard = () => {
                 </Link>
                 <Link
                   to={`/app/addstudentstoclass/${classItem._id}`}
+                  state={{ from: "/app/teacher" }}
                   className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-light-border bg-light-surface px-4 py-2.5 text-sm font-semibold text-light-textPrimary transition hover:bg-light-surfaceMuted dark:border-dark-border dark:bg-dark-surface dark:text-dark-textPrimary dark:hover:bg-dark-surfaceMuted"
                 >
                   <FaUserPlus /> Students

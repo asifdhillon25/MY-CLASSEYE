@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   useGetStudentByIdQuery,
   useUpdateStudentMutation,
@@ -10,6 +10,8 @@ import ErrorMessage from "./common/ErrorMessage";
 const EditStudentProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const backPath = location.state?.from || `/app/students/${id}`;
 
   const { data, isLoading, isError, error } = useGetStudentByIdQuery(id);
   const [updateStudent, { isLoading: isUpdating }] = useUpdateStudentMutation();
@@ -56,7 +58,7 @@ const EditStudentProfile = () => {
       ...safeData,
     }).unwrap();
 
-    navigate(`/app/students/${id}`);
+    navigate(backPath);
   };
 
   console.log("Update payload:", { id, ...formData });

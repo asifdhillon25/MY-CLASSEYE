@@ -225,6 +225,7 @@ const StudentDashboard = () => {
             </Link>
             <Link
               to={`/app/students/edit/${studentId}`}
+              state={{ from: "/app/student" }}
               className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/20"
             >
               <FaUserEdit /> Edit details
@@ -424,6 +425,7 @@ const StudentDashboard = () => {
               </Link>
               <Link
                 to={`/app/students/edit/${studentId}`}
+                state={{ from: "/app/student" }}
                 className="group flex items-center justify-between rounded-xl bg-light-surfaceMuted p-3 transition hover:bg-light-accentSoft dark:bg-dark-surfaceMuted dark:hover:bg-dark-accentSoft"
               >
                 <span className="flex items-center gap-3 text-sm font-medium text-light-textPrimary dark:text-dark-textPrimary">
