@@ -795,6 +795,7 @@ const TeacherDashboard = () => {
                       <td className="px-5 py-4 text-right">
                         <Link
                           to={`/app/students/${item.student._id}`}
+                          state={{ from: "/app/teacher" }}
                           className="inline-flex items-center gap-1.5 text-sm font-semibold text-light-primary hover:underline dark:text-dark-primary"
                         >
                           View <FaArrowRight className="text-xs" />

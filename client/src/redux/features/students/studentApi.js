@@ -26,6 +26,12 @@ export const studentApi = apiSlice.injectEndpoints({
       providesTags: ["Students"],
     }),
 
+    // GET complete attendance details for a student
+    getStudentAttendance: builder.query({
+      query: (id) => `/students/${id}/attendance`,
+      providesTags: ["Students"],
+    }),
+
     // ✅ ADD student
     addStudent: builder.mutation({
       query: (studentData) => ({
@@ -69,6 +75,7 @@ export const {
   useGetStudentsQuery,
   useGetStudentByIdQuery,
   useGetStudentDashboardQuery,
+  useGetStudentAttendanceQuery,
   useAddStudentMutation,
   useUpdateStudentMutation,
   useDeleteStudentMutation,

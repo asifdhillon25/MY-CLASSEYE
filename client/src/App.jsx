@@ -25,6 +25,7 @@ import ClassManagement from "./pages/ClassManagement";
 import AddStudentsToClass from "./pages/AddStudentsToClass";
 import EditStudentProfile from "./pages/EditStudentProfile";
 import Attendance from "./pages/Attendance";
+import StudentAttendance from "./pages/StudentAttendance";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -68,8 +69,10 @@ export default function App() {
         { path: "addstudent", element: <AddStudent /> },
         { path: "searchstudents", element: <SearchStudents /> },
         { path: "addclass", element: <AddClass /> },
+        { path: "attendance", element: <StudentAttendance /> },
         { path: "attendance/:id", element: <Attendance /> },
         { path: "reports", element: <StudentReports /> },
+        { path: "reports/:studentId", element: <StudentAttendance /> },
         { path: "addstudentstoclass/:id", element: <AddStudentsToClass /> },
       ],
     },

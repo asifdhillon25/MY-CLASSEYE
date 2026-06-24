@@ -5,6 +5,7 @@ const StudentCard = ({ student }) => {
   return (
     <Link 
       to={`${student._id}`}
+      state={{ from: "/app/students" }}
       className="block group"
     >
       <div className="bg-light-surface dark:bg-dark-surface rounded-xl border border-light-border dark:border-dark-border p-6 hover:shadow-lg transition-all duration-300 hover:border-brand-teal/50 dark:hover:border-brand-teal/30 group-hover:translate-y-[-2px]">

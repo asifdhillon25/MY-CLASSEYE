@@ -219,6 +219,7 @@ const StudentDashboard = () => {
           <div className="flex flex-wrap gap-3">
             <Link
               to={`/app/students/${studentId}`}
+              state={{ from: "/app/student" }}
               className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-brand-navy shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-50"
             >
               <FaCamera /> Photo & Face ID
@@ -405,6 +406,7 @@ const StudentDashboard = () => {
             <div className="mt-4 space-y-2">
               <Link
                 to={`/app/students/${studentId}`}
+                state={{ from: "/app/student" }}
                 className="group flex items-center justify-between rounded-xl bg-light-surfaceMuted p-3 transition hover:bg-light-accentSoft dark:bg-dark-surfaceMuted dark:hover:bg-dark-accentSoft"
               >
                 <span className="flex items-center gap-3 text-sm font-medium text-light-textPrimary dark:text-dark-textPrimary">
@@ -415,6 +417,7 @@ const StudentDashboard = () => {
               </Link>
               <Link
                 to={`/app/students/${studentId}`}
+                state={{ from: "/app/student" }}
                 className="group flex items-center justify-between rounded-xl bg-light-surfaceMuted p-3 transition hover:bg-light-accentSoft dark:bg-dark-surfaceMuted dark:hover:bg-dark-accentSoft"
               >
                 <span className="flex items-center gap-3 text-sm font-medium text-light-textPrimary dark:text-dark-textPrimary">

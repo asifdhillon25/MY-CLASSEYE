@@ -95,6 +95,123 @@ async function getStudentById(req, res, next) {
   }
 }
 
+// Get complete attendance details for a student
+async function getStudentAttendance(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(new AppError("Invalid student ID", 400));
+    }
+
+    const student = await Student.findById(id)
+      .select(
+        "name roll_no email department year semester photo_url status classes_enrolled",
+      )
+      .lean();
+
+    if (!student) {
+      return next(new AppError("Student not found", 404));
+    }
+
+    const [classes, attendanceDocuments] = await Promise.all([
+      Class.find({
+        $or: [{ students: id }, { _id: { $in: student.classes_enrolled || [] } }],
+      })
+        .select("class_code course_name subject_code semester room teacher")
+        .populate("teacher", "name email department designation")
+        .lean(),
+      Attendance.find({ "records.student": id })
+        .select(
+          "class teacher date records method is_finalized created_at updated_at",
+        )
+        .populate(
+          "class",
+          "class_code course_name subject_code semester room",
+        )
+        .populate("teacher", "name email department designation")
+        .sort({ date: -1 })
+        .lean(),
+    ]);
+
+    const attendance = attendanceDocuments.map((document) => {
+      const studentRecord = document.records.find(
+        (record) => record.student.toString() === id,
+      );
+
+      return {
+        attendance_id: document._id,
+        class: document.class,
+        teacher: document.teacher,
+        date: document.date,
+        status: studentRecord.status,
+        marked_by: studentRecord.marked_by,
+        confidence: studentRecord.confidence,
+        marked_at: studentRecord.marked_at,
+        method: document.method,
+        is_finalized: document.is_finalized,
+        created_at: document.created_at,
+        updated_at: document.updated_at,
+      };
+    });
+
+    const summarize = (records) => {
+      const total = records.length;
+      const present = records.filter((record) => record.status === "present").length;
+      const absent = records.filter((record) => record.status === "absent").length;
+
+      return {
+        total,
+        present,
+        absent,
+        percentage: total ? Number(((present / total) * 100).toFixed(2)) : 0,
+      };
+    };
+
+    const attendanceByClass = classes.map((classItem) => {
+      const records = attendance.filter(
+        (record) =>
+          record.class?._id?.toString() === classItem._id.toString(),
+      );
+
+      return {
+        class: classItem,
+        summary: summarize(records),
+        attendance: records,
+      };
+    });
+
+    res.status(200).json({
+      status: "success",
+      results: attendance.length,
+      data: {
+        student: {
+          _id: student._id,
+          name: student.name,
+          roll_no: student.roll_no,
+          email: student.email,
+          department: student.department,
+          year: student.year,
+          semester: student.semester,
+          photo_url: student.photo_url,
+          status: student.status,
+        },
+        summary: {
+          ...summarize(attendance),
+          enrolled_classes: classes.length,
+          finalized_records: attendance.filter(
+            (record) => record.is_finalized,
+          ).length,
+        },
+        attendance_by_class: attendanceByClass,
+        attendance,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // Update student by ID
 // async function updateStudent(req, res, next) {
 //   try {
@@ -519,6 +636,7 @@ module.exports = {
   createStudent,
   getStudents,
   getStudentById,
+  getStudentAttendance,
   updateStudent,
   deleteStudent,
   getStudentsByDepartment,

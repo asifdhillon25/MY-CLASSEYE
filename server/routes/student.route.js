@@ -9,6 +9,7 @@ const {
   getStudentsByDepartment,
   updateStudentPhoto,
   getStudentDashboard,
+  getStudentAttendance,
 } = require("../controllers/student.controller");
 
 // Create a new student
@@ -19,6 +20,9 @@ router.get("/", getStudents);
 
 // Get calculated dashboard data for a student
 router.get("/dashboard/:id", getStudentDashboard);
+
+// Get complete attendance details for a student
+router.get("/:id/attendance", getStudentAttendance);
 
 // Get a single student by ID
 router.get("/:id", getStudentById);

@@ -1,6 +1,6 @@
 // StudentProfile.jsx (Updated)
 import React, { useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import {
   useGetStudentByIdQuery,
   useUpdateStudentMutation,
@@ -29,6 +29,8 @@ import {
 const StudentProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const backPath = location.state?.from || "/app/students";
   const { data, isLoading, isError, error } = useGetStudentByIdQuery(id);
   const student = data?.data?.student || data?.data || data;
 
@@ -84,7 +86,7 @@ const StudentProfile = () => {
         {/* Back Navigation */}
         <div className="mb-6">
           <Link
-            to="/app/students"
+            to={backPath}
             className="inline-flex items-center gap-2 text-light-textSecondary dark:text-dark-textSecondary hover:text-light-textPrimary dark:hover:text-dark-textPrimary transition-colors"
           >
             <svg
@@ -100,7 +102,7 @@ const StudentProfile = () => {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            Back to Students
+            Back
           </Link>
         </div>
 

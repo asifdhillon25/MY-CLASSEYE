@@ -157,21 +157,13 @@ export default function Sidebar({ isOpen, onToggle, currentRole = "guest" }) {
             <div className="px-4 py-2 text-xs font-semibold text-light-textMuted dark:text-dark-textMuted uppercase tracking-wider">
               My Academics
             </div>
-            <SidebarItem
-              label="My Profile"
-              to="/app/students/profile"
-              icon={<FaIdCard />}
-            />
+            
             <SidebarItem
               label="My Attendance"
               to="/app/attendance"
               icon={<FaCalendarCheck />}
             />
-            <SidebarItem
-              label="My Reports"
-              to="/app/reports"
-              icon={<FaChartBar />}
-            />
+            
           </>
         )}
 
@@ -185,7 +177,7 @@ export default function Sidebar({ isOpen, onToggle, currentRole = "guest" }) {
         )}
 
         {/* Shared reports feature */}
-        {(currentRole === "admin" || currentRole === "teacher" || currentRole === "student") && (
+        {(currentRole === "admin" || currentRole === "teacher" ) && (
           <SidebarItem
             label="Reports"
             to="/app/reports"
