@@ -1,5 +1,7 @@
 // controllers/userController.js
 const User = require("../models/user.model");
+const Student = require("../models/student.model");
+const Teacher = require("../models/teacher.model");
 const AppError = require("../utils/AppError");
 const bcrypt = require("bcryptjs");
 
@@ -31,18 +33,32 @@ async function createUser(req, res, next) {
 
 async function getAllUsers(req, res, next) {
   try {
-    // Fetch users with role-based population
     const users = await User.find()
-      .populate({
-        path: 'linked_id',
-        // Select only necessary fields based on role
-        select: function() {
-          // Since we can't access user.role in select, we'll use lean and process later
-          return 'name email roll_no teacher_id department designation phone';
-        },
-      })
       .select('username email role status join_date linked_id')
       .lean();
+
+    const studentProfileIds = users
+      .filter((user) => user.role === "student" && user.linked_id)
+      .map((user) => user.linked_id);
+    const teacherProfileIds = users
+      .filter((user) => user.role === "teacher" && user.linked_id)
+      .map((user) => user.linked_id);
+
+    const [students, teachers] = await Promise.all([
+      Student.find({ _id: { $in: studentProfileIds } })
+        .select("name email roll_no department year")
+        .lean(),
+      Teacher.find({ _id: { $in: teacherProfileIds } })
+        .select("name email teacher_id department designation phone")
+        .lean(),
+    ]);
+
+    const studentsById = new Map(
+      students.map((student) => [student._id.toString(), student]),
+    );
+    const teachersById = new Map(
+      teachers.map((teacher) => [teacher._id.toString(), teacher]),
+    );
 
     // Structure the response data
     const structuredUsers = users.map(user => {
@@ -58,36 +74,40 @@ async function getAllUsers(req, res, next) {
 
       // Add linked document information based on role
       if (user.linked_id) {
-        const linkedDoc = user.linked_id;
+        const linkedId = user.linked_id.toString();
         
         switch (user.role) {
-          case 'student':
+          case 'student': {
+            const linkedDoc = studentsById.get(linkedId);
             userData.profile = {
-              name: linkedDoc.name || 'Unknown Student',
-              rollNumber: linkedDoc.roll_no,
-              department: linkedDoc.department,
-              year: linkedDoc.year,
-              profileId: linkedDoc._id,
+              name: linkedDoc?.name || 'Unknown Student',
+              rollNumber: linkedDoc?.roll_no,
+              department: linkedDoc?.department,
+              year: linkedDoc?.year,
+              profileId: linkedDoc?._id || user.linked_id,
             };
             break;
+          }
 
-          case 'teacher':
+          case 'teacher': {
+            const linkedDoc = teachersById.get(linkedId);
             userData.profile = {
-              name: linkedDoc.name || 'Unknown Teacher',
-              teacherId: linkedDoc.teacher_id,
-              department: linkedDoc.department,
-              designation: linkedDoc.designation || 'Lecturer',
-              phone: linkedDoc.phone,
-              profileId: linkedDoc._id,
+              name: linkedDoc?.name || 'Unknown Teacher',
+              teacherId: linkedDoc?.teacher_id,
+              department: linkedDoc?.department,
+              designation: linkedDoc?.designation || 'Lecturer',
+              phone: linkedDoc?.phone,
+              profileId: linkedDoc?._id || user.linked_id,
             };
             break;
+          }
 
           case 'admin':
           case 'super_admin':
             // For admins, linked_id might point to admin profile or be null
             userData.profile = {
               name: 'System Administrator',
-              profileId: linkedDoc._id,
+              profileId: user.linked_id,
               adminLevel: user.role === 'super_admin' ? 'Super Admin' : 'Admin',
             };
             break;
@@ -95,7 +115,7 @@ async function getAllUsers(req, res, next) {
           default:
             userData.profile = {
               name: 'Unknown Profile',
-              profileId: linkedDoc._id,
+              profileId: user.linked_id,
             };
         }
       } else {

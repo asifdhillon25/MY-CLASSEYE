@@ -124,11 +124,7 @@ export default function Sidebar({ isOpen, onToggle, currentRole = "guest" }) {
               to="/app/students"
               icon={<FaList />}
             />
-            <SidebarItem
-              label="Search Students"
-              to="/app/searchstudents"
-              icon={<FaSearch />}
-            />
+          
           </>
         )}
 
@@ -160,21 +156,14 @@ export default function Sidebar({ isOpen, onToggle, currentRole = "guest" }) {
             
             <SidebarItem
               label="My Attendance"
-              to="/app/attendance"
+              to="/app/studentattendance"
               icon={<FaCalendarCheck />}
             />
             
           </>
         )}
 
-        {/* Shared attendance feature */}
-        {(currentRole === "admin" || currentRole === "teacher") && (
-          <SidebarItem
-            label="Attendance"
-            to="/app/attendance"
-            icon={<FaCalendarCheck />}
-          />
-        )}
+       
 
         {/* Shared reports feature */}
         {(currentRole === "admin" || currentRole === "teacher" ) && (

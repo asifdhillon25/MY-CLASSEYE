@@ -1,4 +1,6 @@
 const Class = require("../models/class.model");
+const Teacher = require("../models/teacher.model");
+const Student = require("../models/student.model");
 const mongoose = require("mongoose");
 const AppError = require("../utils/AppError");
 
@@ -47,6 +49,11 @@ const createClass = async (req, res, next) => {
       return next(new AppError("Invalid teacher ID", 400));
     }
 
+    const teacher = await Teacher.findById(filteredBody.teacher);
+    if (!teacher) {
+      return next(new AppError("Teacher not found", 404));
+    }
+
     /**
      * 4️⃣ Schedule validation
      */
@@ -79,6 +86,10 @@ const createClass = async (req, res, next) => {
      */
     const newClass = new Class(filteredBody);
     const savedClass = await newClass.save();
+
+    await Teacher.findByIdAndUpdate(savedClass.teacher, {
+      $addToSet: { classes_assigned: savedClass._id },
+    });
 
     res.status(201).json({
       success: true,
@@ -144,6 +155,48 @@ const updateClass = async (req, res, next) => {
       return next(new AppError("Invalid class ID", 400));
     }
 
+    const isUpdatingStudents = Object.prototype.hasOwnProperty.call(
+      req.body,
+      "students",
+    );
+    let previousStudentIds = [];
+    let nextStudentIds = [];
+
+    if (isUpdatingStudents) {
+      if (!Array.isArray(req.body.students)) {
+        return next(new AppError("Students must be an array", 400));
+      }
+
+      nextStudentIds = [...new Set(req.body.students.map(String))];
+
+      const invalidStudentId = nextStudentIds.find(
+        (studentId) => !mongoose.Types.ObjectId.isValid(studentId),
+      );
+      if (invalidStudentId) {
+        return next(new AppError(`Invalid student ID: ${invalidStudentId}`, 400));
+      }
+
+      const existingClass = await Class.findById(req.params.id).select(
+        "students",
+      );
+      if (!existingClass) {
+        return next(new AppError("Class not found", 404));
+      }
+
+      previousStudentIds = existingClass.students.map((studentId) =>
+        studentId.toString(),
+      );
+
+      const studentsCount = await Student.countDocuments({
+        _id: { $in: nextStudentIds },
+      });
+      if (studentsCount !== nextStudentIds.length) {
+        return next(new AppError("One or more students were not found", 404));
+      }
+
+      req.body.students = nextStudentIds;
+    }
+
     const updatedClass = await Class.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -152,6 +205,29 @@ const updateClass = async (req, res, next) => {
 
     if (!updatedClass) {
       return next(new AppError("Class not found", 404));
+    }
+
+    if (isUpdatingStudents) {
+      const studentsToAdd = nextStudentIds.filter(
+        (studentId) => !previousStudentIds.includes(studentId),
+      );
+      const studentsToRemove = previousStudentIds.filter(
+        (studentId) => !nextStudentIds.includes(studentId),
+      );
+
+      if (studentsToAdd.length > 0) {
+        await Student.updateMany(
+          { _id: { $in: studentsToAdd } },
+          { $addToSet: { classes_enrolled: updatedClass._id } },
+        );
+      }
+
+      if (studentsToRemove.length > 0) {
+        await Student.updateMany(
+          { _id: { $in: studentsToRemove } },
+          { $pull: { classes_enrolled: updatedClass._id } },
+        );
+      }
     }
 
     res.status(200).json({

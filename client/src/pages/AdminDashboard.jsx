@@ -418,29 +418,24 @@ const quickActions = [
       {/* Quick Navigation Footer */}
       <div className="flex flex-wrap gap-3 justify-center pt-6 border-t border-light-border dark:border-dark-border">
         <Link
-          to="/app/add-student"
+          to="/app/addstudent"
           className="px-4 py-2 bg-gradient-to-r from-brand-teal to-green-500 text-white rounded-lg hover:opacity-90 transition-all duration-300 text-sm font-medium shadow-md hover:shadow-lg"
         >
           Add New Student
         </Link>
         <Link
-          to="/app/add-teacher"
+          to="/app/addteacher"
           className="px-4 py-2 bg-gradient-to-r from-brand-navy to-blue-600 text-white rounded-lg hover:opacity-90 transition-all duration-300 text-sm font-medium shadow-md hover:shadow-lg"
         >
           Add New Teacher
         </Link>
         <Link
-          to="/app/generate-report"
+          to="/app/reports"
           className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:opacity-90 transition-all duration-300 text-sm font-medium shadow-md hover:shadow-lg"
         >
-          Generate Report
+          Student Reports
         </Link>
-        <Link
-          to="/app/settings"
-          className="px-4 py-2 bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border rounded-lg text-light-textPrimary dark:text-dark-textPrimary hover:bg-light-surfaceMuted dark:hover:bg-dark-surfaceMuted transition-colors text-sm font-medium"
-        >
-          System Settings
-        </Link>
+        
       </div>
     </div>
   );
